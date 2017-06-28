@@ -6,10 +6,11 @@ import time
 # Dictionary that contains the device and device IDs of each
 # of the sensors
 class Sensor:
-    def __init__(self, name, sensor_type):
+    def __init__(self, name, sensor_type, device_ID):
         self.__sensor_name = name
         self.__sensor_type = sensor_type
         self.__reading_incrementation = 2.0
+        self.__sensor_device_ID = device_ID
 
     # Functions that handle setting the attributes
     def set_name(self, name):
