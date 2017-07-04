@@ -19,7 +19,7 @@ class Sensor(Model):
 class SensorReading(Model):
     time = DateTimeField()
     name = CharField()
-    value = FloatField()
+    reading = FloatField()
 
     class Meta:
         database = db
@@ -43,8 +43,8 @@ class SensorData(object):
                             .order_by(SensorReading.time.desc()) \
                             .limit(limit)
 
-    def add_reading(self, time, name, value):
-        SensorReading.create(time=time, name=name, value=value)
+    def add_reading(self, time, name, reading):
+        SensorReading.create(time=time, name=name, reading=reading)
 
     def close(self):
         db.close()
