@@ -4,14 +4,14 @@
 from peewee import *
 
 # Defining the database
-db = SqliteDatabase('reptile.db', check_same_thread=False)
+db = MySQLDatabase('Reptile', user="root", passwd="jacko1994")
 
 # Classes to handle talking to the DB Tables
 class Sensor(Model):
     name = CharField()
     device_id = CharField()
     device_type = CharField()
-    pin = CharField()
+    pin = IntegerField()
 
     class Meta:
         database = db

@@ -1,0 +1,59 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Reptile Temperature Monitor</h1>
+      <p>Monitors the temperature of Reptile Enclosures</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      {% for sensor in config.MODEL.get_sensors() %}
+        <div class="col-md-4">
+          <h2>{{ sensor.name }}</h2>
+          <canvas id="chart_{{ sensor.id }}" width="400" height="400"></canvas>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block tail %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.1.1/Chart.min.js"></script>
+  <script>
+    function buildDSChart(id, labels, temperature) {
+      // Setup temperature chart.
+      var ctx = $(id).get(0).getContext('2d');
+      var dhtChart = new Chart(ctx).Line({
+        labels: labels,
+        datasets: [
+          {
+            label: "Temperature (Celsius)",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: temperature
+          },
+        ]
+      });
+    }
+
+    $(document).ready(function() {
+      {% for sensor in config.MODEL.get_sensors() %}
+      {% set temperature = config.MODEL.get_recent_readings(sensor.name) %}
+      console.log('{{ sensor.name }}');
+      console.log('{{ temperature|join(',', attribute="reading")}}')
+      buildDSChart('#chart_{{ sensor.id }}',
+                    ["{{ temperature|reverse|join('\",\"', attribute='time')|safe }}"],
+                    [{{ temperature|reverse|join(',', attribute="reading") }}]
+                  );
+      {% endfor %}
+    });
+  </script>
+{% endblock %}
