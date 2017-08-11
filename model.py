@@ -24,7 +24,7 @@ class SensorReading(Model):
     class Meta:
         database = db
 
-
+# Class to handle returning the data from the DB
 class SensorData(object):
 
     def __init__(self):

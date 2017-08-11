@@ -36,14 +36,19 @@ def read_in_line_sensor(sensor):
     temperature = temperature / 1000
     return sensor.name, temperature, reading_time
 
-# Function created to read sensors that just input data through to a GPIO
-#def read_GPIO_sensor():
+# TODO: Function created to read sensors that just input data through to a GPIO
+def read_GPIO_sensor():
+    return
 
 # Function to read and display the temperature on the LCD screen
 def LCD_display(sensor, temperature):
     lcd.clear()
     lcd.message('{0}\nTemp: {1}'.format(sensor,temperature))
 
+# TODO: Function to average the temperature out over the past 9 seconds then determine whether
+# to turn the relays on that handle the heating of the enclosures
+def relay_function():
+    return
 
 # Function to handle cycling through the sensors when the button is pressed
 def button_pressed(button):

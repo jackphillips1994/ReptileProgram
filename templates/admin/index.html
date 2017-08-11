@@ -13,7 +13,7 @@
       {% for sensor in config.MODEL.get_sensors() %}
         <div class="col-md-4">
           <h2>{{ sensor.name }}</h2>
-          <canvas id="chart_{{ sensor.id }}" width="400" height="400"></canvas>
+          <canvas id="chart_{{ sensor.id }}" width="800" height="500"></canvas>
         </div>
       {% endfor %}
     </div>
@@ -25,7 +25,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.1.1/Chart.min.js"></script>
   <script>
     function buildDSChart(id, labels, temperature) {
-      // Setup temperature chart.
+      // Setup temperature chart
+      //TODO: Customise the chart to be more readable
       var ctx = $(id).get(0).getContext('2d');
       var dhtChart = new Chart(ctx).Line({
         labels: labels,
@@ -44,13 +45,24 @@
       });
     }
 
+    // Pull data from the DB and pass it through to the chart creation function
     $(document).ready(function() {
       {% for sensor in config.MODEL.get_sensors() %}
       {% set temperature = config.MODEL.get_recent_readings(sensor.name) %}
       console.log('{{ sensor.name }}');
       console.log('{{ temperature|join(',', attribute="reading")}}')
-      buildDSChart('#chart_{{ sensor.id }}',
-                    ["{{ temperature|reverse|join('\",\"', attribute='time')|safe }}"],
+      // Changes the datetime from the database into a more readable version
+      //TODO: Make the below more readable in the chart
+      time = '{{ temperature|join(',', attribute="time")|safe }}'
+      time = time.split(',');
+      hours = [];
+      for(i = 0; i < time.length; i++) {
+        hour = time[i].split(' ')[1]
+        hours.push(hour)
+      };
+      time = hours
+      console.log(time);
+      buildDSChart('#chart_{{ sensor.id }}', time,
                     [{{ temperature|reverse|join(',', attribute="reading") }}]
                   );
       {% endfor %}
